@@ -6,16 +6,21 @@ use Losofacebook\Person;
 use DateTime;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-
+use Memcached;
 /**
  * Image service
  */
 class PersonService extends AbstractService
 {
-
-    public function __construct(Connection $conn)
+    /**
+     *
+     * @var Memcached
+     */
+    private $memcached;
+    public function __construct(Connection $conn, Memcached $memcached)
     {
         parent::__construct($conn, 'person');
+        $this->memcached = $memcached;
     }
 
 
@@ -43,13 +48,13 @@ class PersonService extends AbstractService
             return $this->createPerson($data, $fetchFriends);
         });
     }
-
     public function findFriends($id)
-    {
+    {   
         $friends = [];
         foreach ($this->findFriendIds($id) as $friendId) {
             $friends[] = $this->findById($friendId, false);
         }
+
         return $friends;
     }
 
@@ -74,18 +79,22 @@ class PersonService extends AbstractService
         return $this->findBy($params, ['orderBy' => ['last_name ASC', 'first_name ASC']], false);
     }
 
-
+    /**
+     * 
+     * @param int $id
+     * @return array
+     */
     public function findFriendIds($id)
     {
+        if($ids = $this->memcached->get("friend_ids_{$id}")){
+            return $ids;
+        }
+        
         $myAdded = $this->conn->fetchAll(
-            "SELECT target_id FROM friendship WHERE source_id = ?",
-            [$id]
-        );
+            "SELECT target_id FROM friendship WHERE source_id = ?", [$id]);
 
         $meAdded = $this->conn->fetchAll(
-            "SELECT source_id FROM friendship WHERE target_id = ?",
-            [$id]
-        );
+            "SELECT source_id FROM friendship WHERE target_id = ?", [$id]);
 
         $myAdded = array_reduce($myAdded, function ($result, $row) {
             $result[] = $row['target_id'];
@@ -97,7 +106,9 @@ class PersonService extends AbstractService
             return $result;
         }, []);
 
-        return array_unique(array_merge($myAdded, $meAdded));
+        $ret = array_unique(array_merge($myAdded, $meAdded));
+        $this->memcached->set("friend_ids_{$id}", $ret, $id);
+        return $ret;
     }
 
     /**
