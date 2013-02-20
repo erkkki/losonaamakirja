@@ -72,23 +72,24 @@ class ImageService
     public function createCorporateVersions($id)
     {
         $img = new Imagick($this->basePath . '/' . $id);
-        $img->thumbnailimage(450, 450, true);
+        $img->thumbnailimage(290, 360, true);
 
         $geo = $img->getImageGeometry();
 
-        $x = (500 - $geo['width']) / 2;
-        $y = (500 - $geo['height']) / 2;
+        $x = (290 - $geo['width']) / 2;
+        $y = (360 - $geo['height']) / 2;
 
         $image = new Imagick();
-        $image->newImage(500, 500, new ImagickPixel('white'));
+        $image->newImage(290, 360, new ImagickPixel('white'));
         $image->setImageFormat('jpeg');
         $image->compositeImage($img, $img->getImageCompose(), $x, $y);
 
         $thumb = clone $image;
-        $thumb->cropThumbnailimage(500, 500);
+        $thumb->cropThumbnailimage(290, 360);
         $thumb->setImageCompression(self::COMPRESSION_TYPE);
         $thumb->setImageCompressionQuality(90);
-        $thumb->writeImage($this->basePath . '/' . $id . '-thumb');
+        $thumb->writeImage($this->basePath . '/' . $id . '-thumb-corp290');
+        //290x360
     }
 
 
@@ -97,10 +98,10 @@ class ImageService
         $img = new Imagick($this->basePath . '/' . $id);
         $thumb = clone $img;
 
-        $thumb->cropThumbnailimage(500, 500);
+        $thumb->cropThumbnailimage(126, 126);
         $thumb->setImageCompression(self::COMPRESSION_TYPE);
         $thumb->setImageCompressionQuality(90);
-        $thumb->writeImage($this->basePath . '/' . $id . '-thumb');
+        $thumb->writeImage($this->basePath . '/' . $id . '-thumb-126');
     }
 
     public function getImageResponse($id, $version = null)
