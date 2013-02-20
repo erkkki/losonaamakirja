@@ -113,7 +113,7 @@ $app->get('/api/person', function(Application $app, Request $request) {
 
 $app->get('/api/person/{username}', function(Application $app, $username) {
 
-    /** @var PersonService $personService */
+    // @var PersonService $personService 
     $personService = $app['personService'];
 
     $person = $personService->findByUsername($username);
@@ -186,7 +186,7 @@ $imageRenderer = function(Application $app, $id, $version = null) {
 
 // Did not like the original url, so whe changed.
 $app->get('/api/image/{id}/{version}', $imageRenderer)->value('version', null);
-$app->get('/api/image-renderer/{id}/{version}', $imageRenderer)->value('version', null);
+//$app->get('/api/image-renderer/{id}/{version}', $imageRenderer)->value('version', null);
 
 $app->get('/api/company', function(Application $app, Request $request) {
 
