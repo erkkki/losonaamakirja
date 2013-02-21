@@ -66,6 +66,7 @@ body .navbar .container #losofacebook-logo.brand span#losonaamakirja {
 #wall ul ul li.comment img {
     float: left;
     width: 50px;
+    height: 50px;
 }
 #wall ul ul li > div {
     margin-left: 60px;
@@ -73,6 +74,7 @@ body .navbar .container #losofacebook-logo.brand span#losonaamakirja {
 #wall li.post img {
     float: left;
     width: 75px;
+    height: 75px;
 }
 #wall li.post > div {
     padding-left: 85px;

@@ -31,6 +31,16 @@ class CreateImagesCommand extends Command
         $db = $this->getDb();
         $imageservice = $this->getImageService();
         
+        $images = $db->fetchAll("SELECT * FROM image WHERE type = 1");
+        
+        
+        //$imageservice->createVersions($image['id']);
+        
+        foreach ($images as $image){
+            $imageservice->createVersions($image['id']);
+            $output->writeln("Douing image -> #{$image['id']}");
+        }
+        
         $images = $db->fetchAll("SELECT * FROM image WHERE type = 2");
         
         

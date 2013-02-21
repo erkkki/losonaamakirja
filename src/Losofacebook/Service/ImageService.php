@@ -95,13 +95,28 @@ class ImageService
 
     public function createVersions($id)
     {
-        $img = new Imagick($this->basePath . '/' . $id);
-        $thumb = clone $img;
+        $imgsizes = [
+            '70' => ['x' => 70,
+                     'y' => 70],
+            '260' => ['x' => 210,
+                     'y' => 210],
+            '75' => ['x' => 75,
+                     'y' => 75],
+            '50' => ['x' => 50,
+                     'y' => 50],
+            '126' => ['x' => 126,
+                     'y' => 126]
+        ];
+        foreach ($imgsizes as $size){
+            $img = new Imagick($this->basePath . '/' . $id);
+            $thumb = clone $img;
 
-        $thumb->cropThumbnailimage(126, 126);
-        $thumb->setImageCompression(self::COMPRESSION_TYPE);
-        $thumb->setImageCompressionQuality(90);
-        $thumb->writeImage($this->basePath . '/' . $id . '-thumb-126');
+            $thumb->cropThumbnailimage($size['x'], $size['y']);
+            $thumb->setImageCompression(self::COMPRESSION_TYPE);
+            $thumb->setImageCompressionQuality(90);
+            $thumb->writeImage($this->basePath . '/' . $id . '-thumb-' . $size['x'] . '-' . $size['y']);
+            symlink($this->basePath . '/' . $id . '-thumb-' . $size['x'] . '-' . $size['y'], '/home/user/losofacebook/web/images/' . $id . '-thumb-' . $size['x'] . '-' . $size['y'] . '.jpeg');
+        }
     }
 
     public function getImageResponse($id, $version = null)
@@ -121,6 +136,6 @@ class ImageService
         $response->headers->set('Content-type', 'image/jpeg');
         return $response;
     }
-
+    
 
 }
