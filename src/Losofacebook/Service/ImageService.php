@@ -104,6 +104,8 @@ class ImageService
                      'y' => 75],
             '50' => ['x' => 50,
                      'y' => 50],
+            '20' => ['x' => 20,
+                     'y' => 20],
             '126' => ['x' => 126,
                      'y' => 126]
         ];
@@ -115,7 +117,11 @@ class ImageService
             $thumb->setImageCompression(self::COMPRESSION_TYPE);
             $thumb->setImageCompressionQuality(90);
             $thumb->writeImage($this->basePath . '/' . $id . '-thumb-' . $size['x'] . '-' . $size['y']);
-            symlink($this->basePath . '/' . $id . '-thumb-' . $size['x'] . '-' . $size['y'], '/home/user/losofacebook/web/images/' . $id . '-thumb-' . $size['x'] . '-' . $size['y'] . '.jpeg');
+            if (!is_link('/home/user/losofacebook/web/images/' . $id . '-thumb-' . $size['x'] . '-' . $size['y'] . '.jpeg')) {
+                symlink($this->basePath . '/' . $id . '-thumb-' . $size['x'] . '-' . $size['y'],
+                    '/home/user/losofacebook/web/images/' . $id . '-thumb-' . $size['x'] . '-' . $size['y'] . '.jpeg');
+            }    
+            
         }
     }
 
