@@ -34,7 +34,7 @@ function PersonCtrl($scope, $routeParams, Person, Post, Friend) {
 
     $scope.person = Person.get({username: $routeParams.username}, function(person) {
         $scope.backgroundImage = 'http://place.manatee.lc/' + person.backgroundId + '/940/235.jpg';
-        $scope.profileImage = '/img/' + person.primaryImageId + '-thumb-126-126.jpeg';
+        $scope.profileImage = '/images/' + person.primaryImageId + '-thumb-126-126.jpeg';
 
         $scope.birthdayx = Friend.query({ 'username': person.username, 'birthday': true });
 

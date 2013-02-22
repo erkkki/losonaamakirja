@@ -4,7 +4,6 @@
         <li ng-repeat="friend in friends | orderBy:['lastName', 'firstName']">
             <img class="friend-image" ng-src="/images/{{ friend.primaryImageId }}-thumb-50-50.jpeg">
             <a ng-href="/person/{{ friend.username }}">{{ friend.firstName }} {{ friend.lastName }}</a>
-
             {{ person.birthDay }}
 
         </li>
